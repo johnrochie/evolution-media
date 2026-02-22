@@ -5,10 +5,19 @@ import { Resend } from 'resend'
 // Get free API key from: https://resend.com
 const resend = new Resend(process.env.RESEND_API_KEY || 're_123456789') // Replace with actual key
 
+// Debug logging
+console.log('🔧 Contact API Route Loaded')
+console.log('Resend API Key exists:', !!process.env.RESEND_API_KEY)
+console.log('Resend API Key length:', process.env.RESEND_API_KEY?.length || 0)
+
 export async function POST(request: NextRequest) {
   try {
+    console.log('📨 Contact form submission received')
+    
     const body = await request.json()
     const { name, email, business, budget, message } = body
+    
+    console.log('Form data:', { name, email, business, budget, message: message?.substring(0, 50) })
 
     // Basic validation
     if (!name || !email || !business || !budget) {
@@ -72,35 +81,62 @@ export async function POST(request: NextRequest) {
       </html>
     `
 
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
-      from: 'Evolution Media <hello@evomedia.site>',
-      to: ['hello@evomedia.site'], // Your email address
-      subject: `🎯 New Inquiry: ${name} - ${business}`,
-      html: emailContent,
-      text: `
-        New Client Inquiry - Evolution Media
-        
-        Name: ${name}
-        Email: ${email}
-        Business: ${business}
-        Budget: ${budget}
-        Message: ${message || 'No additional message provided'}
-        
-        Submitted: ${new Date().toLocaleString()}
-        Source: Evolution Media Website (evomedia.site)
-      `,
-    })
+    // Try custom domain first, fall back to Resend domain if not verified
+    const sendEmail = async (useCustomDomain: boolean) => {
+      const fromAddress = useCustomDomain 
+        ? 'Evolution Media <hello@evomedia.site>'
+        : 'Evolution Media <onboarding@resend.dev>'
+      
+      console.log(`Attempting to send email from: ${fromAddress}`)
+      
+      return await resend.emails.send({
+        from: fromAddress,
+        to: ['hello@evomedia.site'],
+        replyTo: email,
+        subject: `🎯 New Inquiry: ${name} - ${business}`,
+        html: emailContent,
+        text: `
+          New Client Inquiry - Evolution Media
+          
+          Name: ${name}
+          Email: ${email}
+          Business: ${business}
+          Budget: ${budget}
+          Message: ${message || 'No additional message provided'}
+          
+          Submitted: ${new Date().toLocaleString()}
+          Source: Evolution Media Website (evomedia.site)
+        `,
+      })
+    }
+
+    // Try custom domain first
+    let result = await sendEmail(true)
+    
+    // If custom domain fails (not verified), try Resend domain
+    if (result.error && result.error.message?.includes('domain') || result.error.message?.includes('verified')) {
+      console.log('Custom domain failed, trying Resend domain...')
+      result = await sendEmail(false)
+    }
+
+    const { data, error } = result
 
     if (error) {
-      console.error('Resend error:', error)
+      console.error('❌ Resend error:', error)
+      console.error('Error details:', JSON.stringify(error, null, 2))
       return NextResponse.json(
-        { error: 'Failed to send email' },
+        { 
+          error: 'Failed to send email', 
+          details: error.message,
+          suggestion: 'Check if domain is verified in Resend dashboard'
+        },
         { status: 500 }
       )
     }
 
-    console.log('Email sent successfully:', data)
+    console.log('✅ Email sent successfully!')
+    console.log('Email ID:', data?.id)
+    console.log('From address used:', data?.from)
 
     return NextResponse.json(
       { success: true, message: 'Form submitted successfully' },
