@@ -13,7 +13,7 @@ declare global {
 
 export default function Analytics() {
   // Your Google Analytics Measurement ID (starts with G-)
-  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX'
+  const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-QHMLLJGKMS'
 
   useEffect(() => {
     // Initialize data layer
