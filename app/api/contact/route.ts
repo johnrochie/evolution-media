@@ -87,11 +87,15 @@ export async function POST(request: NextRequest) {
         ? 'Evolution Media <hello@evomedia.site>'
         : 'Evolution Media <onboarding@resend.dev>'
       
-      console.log(`Attempting to send email from: ${fromAddress}`)
+      // Destination email - configurable via environment variable
+      // Default: hello@evomedia.site (but you can change to your personal email)
+      const toEmail = process.env.CONTACT_FORM_TO_EMAIL || 'hello@evomedia.site'
+      
+      console.log(`Attempting to send email from: ${fromAddress} to: ${toEmail}`)
       
       return await resend.emails.send({
         from: fromAddress,
-        to: ['hello@evomedia.site'],
+        to: [toEmail],
         replyTo: email,
         subject: `🎯 New Inquiry: ${name} - ${business}`,
         html: emailContent,
