@@ -1,24 +1,22 @@
 // Dashboard Configuration
 // This file contains configuration for the admin analytics dashboard
 
-// IMPORTANT: Change this password for production use!
-// In a real application, you should:
-// 1. Use environment variables for passwords
-// 2. Implement proper authentication (OAuth, JWT, etc.)
-// 3. Store passwords securely (hashed, not plain text)
-// 4. Consider using a backend API for authentication
+// IMPORTANT: For security, the password should be managed server-side
+// This is a simple frontend implementation for MVP
+// For production, consider implementing proper backend authentication
 
 export const DASHBOARD_CONFIG = {
   // Password for accessing the analytics dashboard
+  // WARNING: This is frontend-only security (not production-grade)
   // Default: evomedia2026
-  // Change this to your preferred password
-  PASSWORD: process.env.NEXT_PUBLIC_DASHBOARD_PASSWORD || 'evomedia2026',
+  // In production, implement backend API with proper authentication
+  PASSWORD: 'evomedia2026', // Hardcoded for now - will be replaced with API
   
   // Session duration in minutes (how long login lasts)
   SESSION_DURATION_MINUTES: 60,
   
   // Enable/disable the dashboard
-  ENABLED: process.env.NEXT_PUBLIC_ENABLE_DASHBOARD !== 'false',
+  ENABLED: true,
   
   // Dashboard features
   FEATURES: {
@@ -31,11 +29,12 @@ export const DASHBOARD_CONFIG = {
   
   // Security notes
   SECURITY_NOTES: [
-    'This is a simple frontend password protection',
-    'For production, implement proper backend authentication',
-    'Consider using environment variables for passwords',
-    'Regularly rotate passwords',
-    'Monitor dashboard access logs',
+    'WARNING: Frontend-only password protection',
+    'Password is visible in client-side code',
+    'For production: Implement backend API authentication',
+    'For production: Use environment variables server-side',
+    'For production: Hash passwords, never store plain text',
+    'This is suitable for MVP but not production-grade security',
   ]
 }
 

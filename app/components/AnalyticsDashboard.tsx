@@ -1,10 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DASHBOARD_CONFIG } from '../config/dashboard'
-
-// Password for dashboard access (from configuration)
-const DASHBOARD_PASSWORD = DASHBOARD_CONFIG.PASSWORD
+import { 
+  DASHBOARD_PASSWORD, 
+  validatePassword, 
+  isSessionValid, 
+  createSession, 
+  clearSession,
+  SECURITY_LEVEL 
+} from '../config/auth'
 
 export default function AnalyticsDashboard() {
   const [analyticsData, setAnalyticsData] = useState({
@@ -22,8 +26,7 @@ export default function AnalyticsDashboard() {
 
   useEffect(() => {
     // Check if user is already authenticated (from session storage)
-    const storedAuth = sessionStorage.getItem('evomedia_dashboard_auth')
-    if (storedAuth === 'true') {
+    if (isSessionValid()) {
       setIsAuthenticated(true)
     }
 
@@ -57,9 +60,9 @@ export default function AnalyticsDashboard() {
     e.preventDefault()
     setLoginError('')
 
-    if (password === DASHBOARD_PASSWORD) {
+    if (validatePassword(password)) {
       setIsAuthenticated(true)
-      sessionStorage.setItem('evomedia_dashboard_auth', 'true')
+      createSession()
       setShowLogin(false)
       setPassword('')
     } else {
@@ -70,7 +73,7 @@ export default function AnalyticsDashboard() {
 
   const handleLogout = () => {
     setIsAuthenticated(false)
-    sessionStorage.removeItem('evomedia_dashboard_auth')
+    clearSession()
     setShowLogin(false)
   }
 
@@ -164,10 +167,11 @@ export default function AnalyticsDashboard() {
             </div>
           </form>
 
-          <div className="mt-6 p-3 bg-blue-900/20 border border-blue-500/20 rounded-lg">
-            <p className="text-xs text-gray-400">
-              <strong>Note:</strong> This dashboard is for site administrators only.
-              Regular visitors cannot access analytics data.
+          <div className="mt-6 p-3 bg-yellow-900/20 border border-yellow-500/20 rounded-lg">
+            <p className="text-xs text-yellow-400">
+              <strong>⚠️ Security Notice:</strong> This is frontend-only password protection.
+              For production, implement backend API authentication.
+              Change password in <code className="text-yellow-300">app/config/auth.ts</code> before launch.
             </p>
           </div>
         </div>
@@ -275,7 +279,26 @@ export default function AnalyticsDashboard() {
               <span className="text-gray-300">Admin Access</span>
               <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">Authenticated</span>
             </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-300">Security Level</span>
+              <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded text-xs">MVP Frontend</span>
+            </div>
           </div>
+        </div>
+
+        {/* Security Warning */}
+        <div className="mt-4 p-3 bg-yellow-900/20 border border-yellow-500/20 rounded-xl">
+          <h4 className="font-semibold text-yellow-300 mb-2 flex items-center">
+            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            Security Notice
+          </h4>
+          <p className="text-xs text-yellow-400">
+            This dashboard uses frontend-only password protection.
+            For production, implement backend API authentication.
+            Change password in <code className="text-yellow-300">app/config/auth.ts</code>.
+          </p>
         </div>
 
         {/* Instructions */}
