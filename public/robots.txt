@@ -1,0 +1,38 @@
+# Evolution Media - robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://evomedia.site/sitemap.xml
+
+# Crawl delay (requests per second)
+Crawl-delay: 1
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+
+# Allow all other pages
+Allow: /*
+
+# Googlebot specific
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+# Bingbot
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+# Common social media crawlers
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: FacebookExternalHit
+Allow: /
