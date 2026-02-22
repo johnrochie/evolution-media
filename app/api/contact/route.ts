@@ -140,7 +140,8 @@ export async function POST(request: NextRequest) {
 
     console.log('✅ Email sent successfully!')
     console.log('Email ID:', data?.id)
-    console.log('From address used:', data?.from)
+    // Note: Resend response doesn't include 'from' property in TypeScript types
+    // Email was sent using the fromAddress variable in sendEmail function
 
     return NextResponse.json(
       { success: true, message: 'Form submitted successfully' },
