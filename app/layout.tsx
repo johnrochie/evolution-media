@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Analytics from './components/Analytics'
+import AnalyticsDashboard from './components/AnalyticsDashboard'
 import CookieConsent from './components/CookieConsent'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -58,6 +59,7 @@ export default function RootLayout({
       <body className={`${inter.className} bg-gray-900 text-white`}>
         {children}
         <Analytics />
+        <AnalyticsDashboard />
         <CookieConsent />
       </body>
     </html>

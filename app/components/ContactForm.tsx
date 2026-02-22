@@ -24,6 +24,25 @@ export default function ContactForm() {
     setSubmitStatus('idle')
 
     try {
+      // Track form submission for analytics
+      if (typeof window !== 'undefined') {
+        // Google Analytics event
+        if (window.gtag) {
+          window.gtag('event', 'generate_lead', {
+            currency: 'EUR',
+            value: formData.budget?.match(/\d+/)?.[0] || 499,
+            event_category: 'Contact',
+            event_label: 'Form Submission',
+          })
+        }
+        
+        // Custom event for our analytics
+        window.dispatchEvent(new CustomEvent('formSubmitted', { detail: formData }))
+        
+        // Console log for debugging
+        console.log('📧 Form submitted for analytics:', formData)
+      }
+
       // Call the API endpoint
       const response = await fetch('/api/contact', {
         method: 'POST',
