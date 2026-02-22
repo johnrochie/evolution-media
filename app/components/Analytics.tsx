@@ -65,17 +65,6 @@ export default function Analytics() {
       })
     }
 
-    // Track outbound links
-    const setupOutboundLinkTracking = () => {
-      const links = document.querySelectorAll('a[href^="http"]:not([href*="evomedia.site"])')
-      links.forEach(link => {
-        link.addEventListener('click', (e) => {
-          const url = (e.currentTarget as HTMLAnchorElement).href
-          trackEvent('Outbound', 'click', url, 1)
-        })
-      })
-    }
-
     // Track portfolio clicks
     const setupPortfolioTracking = () => {
       const portfolioLinks = document.querySelectorAll('a[href*="vercel.app"]')
@@ -106,39 +95,11 @@ export default function Analytics() {
       })
     }
 
-    // Track time on page
-    const setupTimeTracking = () => {
-      let startTime = Date.now()
-      let maxTime = 0
-
-      const updateTime = () => {
-        const currentTime = Date.now()
-        const timeSpent = Math.round((currentTime - startTime) / 1000)
-        maxTime = Math.max(maxTime, timeSpent)
-
-        // Track at intervals
-        if (timeSpent === 30 || timeSpent === 60 || timeSpent === 120) {
-          trackEvent('Engagement', 'time_spent', `${timeSpent} seconds`, timeSpent)
-        }
-      }
-
-      const interval = setInterval(updateTime, 1000)
-
-      window.addEventListener('beforeunload', () => {
-        clearInterval(interval)
-        trackEvent('Engagement', 'session_end', `Total time: ${maxTime}s`, maxTime)
-      })
-
-      return () => clearInterval(interval)
-    }
-
     // Initialize all tracking
     trackPageView()
     setupButtonTracking()
-    setupOutboundLinkTracking()
     setupPortfolioTracking()
     setupScrollTracking()
-    const cleanupTimeTracking = setupTimeTracking()
 
     // Listen for custom events
     window.addEventListener('formSubmitted', (e: any) => {
@@ -147,7 +108,6 @@ export default function Analytics() {
 
     // Cleanup
     return () => {
-      cleanupTimeTracking()
       window.removeEventListener('formSubmitted', (e: any) => {
         trackFormSubmission(e.detail)
       })
@@ -179,44 +139,6 @@ export default function Analytics() {
 
       {/* Vercel Analytics */}
       <VercelAnalytics />
-
-      {/* Simple Analytics Dashboard Script */}
-      <Script
-        id="simple-analytics"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            // Simple dashboard data collection
-            (function() {
-              // Track unique visitors
-              const visitorId = 'visitor_' + Math.random().toString(36).substr(2, 9);
-              const storedId = localStorage.getItem('evomedia_visitor_id');
-              
-              if (!storedId) {
-                localStorage.setItem('evomedia_visitor_id', visitorId);
-                console.log('New visitor:', visitorId);
-              } else {
-                console.log('Returning visitor:', storedId);
-              }
-
-              // Track page views in localStorage
-              const pageViews = parseInt(localStorage.getItem('evomedia_page_views') || '0') + 1;
-              localStorage.setItem('evomedia_page_views', pageViews.toString());
-              
-              // Track referrer
-              const referrer = document.referrer || 'direct';
-              localStorage.setItem('evomedia_referrer', referrer);
-
-              // Log to console (in production, send to your API)
-              console.log('📊 Evolution Media Analytics:');
-              console.log('• Page Views:', pageViews);
-              console.log('• Referrer:', referrer);
-              console.log('• Path:', window.location.pathname);
-              console.log('• GA ID:', '${GA_MEASUREMENT_ID}');
-            })();
-          `,
-        }}
-      />
     </>
   )
 }
