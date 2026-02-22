@@ -165,17 +165,23 @@ export default function Home() {
               { 
                 name: 'Travel Bug', 
                 category: 'Travel Agency', 
-                url: 'https://travelbug-v1.vercel.app'
+                url: 'https://travelbug-v1.vercel.app',
+                color: 'from-pink-500 to-rose-500',
+                features: ['Travel booking', 'Destination guides', 'Mobile responsive']
               },
               { 
                 name: 'Rei Bridal', 
                 category: 'Bridal Boutique', 
-                url: 'https://reibridal-v1.vercel.app'
+                url: 'https://reibridal-v1.vercel.app',
+                color: 'from-amber-500 to-yellow-500',
+                features: ['Bridal collections', 'Designer showcase', 'Appointment booking']
               },
               { 
                 name: 'Sensory Play Zone', 
                 category: 'Kids Activity', 
-                url: 'https://sensory-play-zone.vercel.app'
+                url: 'https://sensory-play-zone.vercel.app',
+                color: 'from-green-500 to-emerald-500',
+                features: ['Activity booking', 'Parent portal', 'Session management']
               },
             ].map((project) => (
               <a
@@ -183,16 +189,74 @@ export default function Home() {
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group bg-gray-900/50 backdrop-blur-sm rounded-3xl border border-white/10 hover:border-cyan-500/50 transition-all duration-500 overflow-hidden"
+                className="group bg-gray-900/50 backdrop-blur-sm rounded-3xl border border-white/10 hover:border-cyan-500/50 transition-all duration-500 overflow-hidden hover:scale-[1.02]"
               >
-                <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                  <div className="text-4xl opacity-30">{project.name.split(' ')[0].charAt(0)}</div>
+                <div className="aspect-video relative overflow-hidden">
+                  {/* Website mockup background */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${project.color} opacity-20`}></div>
+                  
+                  {/* Browser window mockup */}
+                  <div className="absolute inset-4 bg-white/90 rounded-lg shadow-lg">
+                    {/* Browser header */}
+                    <div className="flex items-center p-2 border-b border-gray-200">
+                      <div className="flex space-x-1">
+                        <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                      </div>
+                      <div className="flex-1 mx-2 h-4 bg-gray-200 rounded"></div>
+                    </div>
+                    
+                    {/* Website content mockup */}
+                    <div className="p-4">
+                      {/* Header */}
+                      <div className="h-6 bg-gray-300 rounded mb-3 w-3/4"></div>
+                      
+                      {/* Content blocks */}
+                      <div className="space-y-2">
+                        <div className="h-4 bg-gray-200 rounded w-full"></div>
+                        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                        <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+                      </div>
+                      
+                      {/* Feature pills */}
+                      <div className="flex flex-wrap gap-1 mt-4">
+                        {project.features.map((feature, idx) => (
+                          <div key={idx} className="px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">
+                            {feature}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-cyan-500/0 group-hover:bg-cyan-500/10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                    <div className="bg-black/80 text-white px-4 py-2 rounded-lg font-semibold">
+                      View Live Site →
+                    </div>
+                  </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2">{project.name}</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xl font-bold">{project.name}</h3>
+                    <svg
+                      className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                      />
+                    </svg>
+                  </div>
                   <p className="text-gray-400 mb-4">{project.category}</p>
-                  <div className="text-cyan-400 group-hover:text-cyan-300 transition-colors">
-                    View Live Site →
+                  <div className="text-sm text-gray-500">
+                    Built in 24 hours • Live production site
                   </div>
                 </div>
               </a>

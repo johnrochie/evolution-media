@@ -24,26 +24,27 @@ export default function ContactForm() {
     setSubmitStatus('idle')
 
     try {
-      // In production, this would call your API endpoint
-      // For now, we'll simulate a successful submission
-      console.log('Form submitted:', formData)
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // Here's what would happen in production:
-      // const response = await fetch('/api/contact', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData)
-      // })
-      
+      // Call the API endpoint
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to submit form')
+      }
+
       // Redirect to thank you page after successful submission
       window.location.href = '/thank-you'
       
     } catch (error) {
       console.error('Form submission error:', error)
       setSubmitStatus('error')
+      // Show error message to user
+      alert('Failed to submit form. Please try again or email us directly at hello@evomedia.site')
     } finally {
       setIsSubmitting(false)
     }
