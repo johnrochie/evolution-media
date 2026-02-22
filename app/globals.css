@@ -87,3 +87,29 @@ body {
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+/* Custom styles for dropdowns in dark theme */
+select {
+  background-color: #1f2937 !important; /* gray-900 */
+  color: white !important;
+}
+
+select option {
+  background-color: #1f2937 !important; /* gray-900 */
+  color: white !important;
+}
+
+select:focus {
+  outline: 2px solid #06b6d4 !important; /* cyan-500 */
+  outline-offset: 2px;
+}
+
+/* Remove default dropdown arrow and add custom */
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
